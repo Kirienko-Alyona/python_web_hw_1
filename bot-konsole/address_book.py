@@ -26,8 +26,7 @@ class AddressBook(UserDict):
     def search_in_contact_book(self, data) -> str:
         '''Looks for mathches in names, phones, mails, tags, notes, birthdays.'''
 
-        table_show_all = TableShowAll()
-        table = table_show_all.header_func()
+        table = TableShowAll().header_func()
         data = data[0] if data else ""
         counter = 0
 
@@ -51,7 +50,7 @@ class AddressBook(UserDict):
                 data in note
             ):
 
-                table_line = table_show_all.line_func(record)
+                table_line = TableShowAll().line_func(record)
                 table += table_line
                 counter += 1
 
