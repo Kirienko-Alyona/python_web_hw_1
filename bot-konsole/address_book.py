@@ -2,7 +2,7 @@ from collections import UserDict
 from record import Record
 from datetime import datetime
 from termcolor import colored
-from print_table import header_func, line_func
+from print_table import TableShowAll
 import os
 import pickle
 
@@ -26,7 +26,8 @@ class AddressBook(UserDict):
     def search_in_contact_book(self, data) -> str:
         '''Looks for mathches in names, phones, mails, tags, notes, birthdays.'''
 
-        table = header_func()
+        table_show_all = TableShowAll()
+        table = table_show_all.header_func()
         data = data[0] if data else ""
         counter = 0
 
@@ -50,7 +51,8 @@ class AddressBook(UserDict):
                 data in note
             ):
 
-                table += line_func(record)
+                table_line = table_show_all.line_func(record)
+                table += table_line
                 counter += 1
 
         if counter < 1 and not data:

@@ -1,72 +1,87 @@
 from record import Record
 from termcolor import colored
+from abc import ABC, abstractmethod
 
 
-def header_func() -> str:
-    '''Creates a header of a table.'''
-    header = "\n|" + "-" * 117 + "|"
-    headers = ["Name", "Phone", "Birthday", "Email", "Tags", "Notes"]
-    columns = "\n|{:^15}|{:^15}|{:^12}|{:^25}|{:^15}|{:^30}|"
-    header += columns.format(*headers)
-    header += "\n|" + "-" * 117 + "|"
-    header = colored(f"{header}", "blue")
+class Table(ABC):
 
-    return header
+    @abstractmethod
+    def header_func(self) -> str:
+        pass
 
 
-def line_func(record: Record) -> str:
-    '''Creates lines of a table.'''
-    line = ""
-    columns = "\n|{:^15}|{:^15}|{:^12}|{:^25}|{:^15}|{:^30}|"
+    @abstractmethod
+    def line_func(self, record: Record) -> str:
+        pass
 
-    name = record.name.value.title()
-    name_table = [name[i:i+13] for i in range(0, len(name), 13)]
 
-    phone_table = [phone.value for phone in record.phones]
+class TableShowAll(Table):
+    
+    def header_func(self) -> str:
+        '''Creates a header of a table.'''
+        header = "\n|" + "-" * 117 + "|"
+        headers = ["Name", "Phone", "Birthday", "Email", "Tags", "Notes"]
+        columns = "\n|{:^15}|{:^15}|{:^12}|{:^25}|{:^15}|{:^30}|"
+        header += columns.format(*headers)
+        header += "\n|" + "-" * 117 + "|"
+        header = colored(f"{header}", "blue")
 
-    birthday = record.birthday.value.strftime(
-        "%d.%m.%Y") if record.birthday else ""
-    birthday_table = [birthday]
+        return header
 
-    email_table = []
 
-    for email in record.emails:
-        for i in range(0, len(email.value), 23):
-            email_table.append(email.value[i:i+23])
+    def line_func(self, record: Record) -> str:
+        '''Creates lines of a table.'''
+        line = ""
+        columns = "\n|{:^15}|{:^15}|{:^12}|{:^25}|{:^15}|{:^30}|"
 
-    tag = record.tag.value if record.tag else ""
-    tag_table = []
-    temp = ""
-    tag_i = ""
+        name = record.name.value.title()
+        name_table = [name[i:i+13] for i in range(0, len(name), 13)]
 
-    for tag_i in tag:
+        phone_table = [phone.value for phone in record.phones]
 
-        if len(temp + tag_i) < 13:
-            temp += " " + tag_i
+        birthday = record.birthday.value.strftime(
+            "%d.%m.%Y") if record.birthday else ""
+        birthday_table = [birthday]
 
-        else:
-            tag_table.append(temp)
-            temp = tag_i
+        email_table = []
 
-    tag_table.append(temp)
+        for email in record.emails:
+            for i in range(0, len(email.value), 23):
+                email_table.append(email.value[i:i+23])
 
-    note = record.note.value if record.note else " "
-    note_table = [note[i:i+28] for i in range(0, len(note), 28)]
+        tag = record.tag.value if record.tag else ""
+        tag_table = []
+        temp = ""
+        tag_i = ""
 
-    all_table = [name_table, phone_table, birthday_table,
-                 email_table, tag_table, note_table]
-    max_len_table = len(max(all_table, key=lambda table: len(table)))
+        for tag_i in tag:
 
-    for i in range(max_len_table):
-        cells = []
+            if len(temp + tag_i) < 13:
+                temp += " " + tag_i
 
-        for table in all_table:
+            else:
+                tag_table.append(temp)
+                temp = tag_i
 
-            table = table[i] if i < len(table) else ""
-            cells.append(table)
+        tag_table.append(temp)
 
-        line += columns.format(*cells)
+        note = record.note.value if record.note else " "
+        note_table = [note[i:i+28] for i in range(0, len(note), 28)]
 
-    line += "\n|" + "-" * 117 + "|"
+        all_table = [name_table, phone_table, birthday_table,
+                    email_table, tag_table, note_table]
+        max_len_table = len(max(all_table, key=lambda table: len(table)))
 
-    return line
+        for i in range(max_len_table):
+            cells = []
+
+            for table in all_table:
+
+                table = table[i] if i < len(table) else ""
+                cells.append(table)
+
+            line += columns.format(*cells)
+
+        line += "\n|" + "-" * 117 + "|"
+
+        return line
