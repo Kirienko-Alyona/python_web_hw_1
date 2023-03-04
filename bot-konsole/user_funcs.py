@@ -485,7 +485,6 @@ def handler(input_string: str) -> list:
     where the first value is the name.
     """
     command = ""
-    #perhaps_command = what_is_command(FUNCTIONS, input_string)
     data = ""
     input_string = input_string.strip().lower() + " "
     for key in FUNCTIONS:
